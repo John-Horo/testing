@@ -4,6 +4,7 @@
   "id": "root",
   "format": "categories",
   "basicCategoryTitle": "Basic Configuration",
+  "desc": "Add optional description here. (HTML format)",
   "options": {
     "disable_collapse": true,
     "disable_properties": true
