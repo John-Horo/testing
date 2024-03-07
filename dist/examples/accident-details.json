@@ -1,603 +1,886 @@
 {
-  "title": "Accident Details",
-  "schema": {
-    "type": "object",
-    "title": "",
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "properties": {
-      "photo": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/photo"
-        },
-        "options": {
-          "collapsed": true
-        },
-        "propertyOrder": 3
-      },
-      "person": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/person"
-        },
-        "options": {
-          "collapsed": true
-        },
-        "propertyOrder": 2
-      },
-      "vehicle": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/vehicle"
-        },
-        "options": {
-          "collapsed": true
-        },
-        "propertyOrder": 1
-      },
-      "accidentDetails": {
-        "$ref": "#/definitions/accidentDetails",
-        "options": {
-          "collapsed": true
-        },
-        "propertyOrder": 0
-      }
+  "title": "Default Configuration",
+  "type": "object",
+  "id": "root",
+  "format": "categories",
+  "basicCategoryTitle": "Basic Configuration",
+  "options": {
+    "disable_collapse": true,
+    "disable_properties": true
+  },
+  "required": [
+    "dataset",
+    "sources",
+    "aggregated_sources",
+    "flags",
+    "truncate_snapshots"
+  ],
+  "properties": {
+    "dataset": {
+      "title": "Dataset Id",
+      "type": "string",
+      "minLength": 1
     },
-    "definitions": {
-      "photo": {
-        "type": "object",
-        "title": "Photo",
-        "multiple": true,
-        "required": [
-          "_localId",
-          "Picture"
-        ],
-        "properties": {
-          "Picture": {
-            "type": "string",
-            "media": {
-              "type": "image/jpeg",
-              "binaryEncoding": "base64"
-            },
-            "fieldType": "image",
-            "propertyOrder": 0
-          },
-          "_localId": {
-            "type": "string",
-            "options": {
-              "hidden": true
-            },
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
-          },
-          "Description": {
-            "type": "string",
-            "format": "text",
-            "fieldType": "text",
-            "isSearchable": true,
-            "propertyOrder": 1
-          }
-        },
-        "definitions": {},
-        "description": "Pictures of the accident",
-        "plural_title": "Photos"
+    "sources": {
+      "type": "array",
+      "title": "Sources",
+      "id": "sources_id",
+      "options": {
+        "compact": true,
+        "disable_collapse": true
       },
-      "person": {
+      "items": {
         "type": "object",
-        "title": "Person",
-        "multiple": true,
-        "required": [
-          "_localId"
-        ],
+        "title": "Source",
         "properties": {
-          "Age": {
+          "table": {
             "type": "string",
-            "format": "number",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 4
+            "id": "table_id",
+            "title": "Source Table Name",
+            "minLength": 1
           },
-          "Sex": {
-            "enum": [
-              "Male",
-              "Female"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 3
-          },
-          "Name": {
-            "type": "string",
-            "format": "text",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 0
-          },
-          "Injury": {
-            "enum": [
-              "Fatal",
-              "Serious",
-              "Minor",
-              "Not injured"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 5
-          },
-          "Address": {
-            "type": "string",
-            "format": "text",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 1
-          },
-          "vehicle": {
-            "type": "string",
-            "watch": {
-              "target": "vehicle"
+          "interim_table": {
+            "title": "Interim Configuration",
+            "type": "object",
+            "id": "interim",
+            "options": {
+              "collapsed": true,
+              "inputClass": "bold-title"
             },
-            "fieldType": "reference",
-            "enumSource": [
-              {
-                "title": "{{item.vehicle type}} {{item.Make}} {{item.Model}}",
-                "value": "{{item._localId}}",
-                "source": "target"
+            "properties": {
+              "enabled": {
+                "title": "Enable Interim Table",
+                "type": "boolean",
+                "format": "checkbox",
+                "default": false
+              },
+              "custom_table_name": {
+                "type": "string",
+                "title": "Custom Table Name",
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "selected_columns": {
+                "type": "array",
+                "format": "table",
+                "title": "Selected Columns",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "renamed_columns": {
+                "type": "array",
+                "format": "table",
+                "title": "Renamed Columns",
+                "uniqueItems": true,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "old_column_name": {
+                      "title": "Old Column Name",
+                      "type": "string",
+                      "enumSource": "select_columns",
+                      "watch": {
+                        "select_columns": "interim.selected_columns"
+                      }
+                    },
+                    "new_column_name": {
+                      "title": "New Column Name",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "derived_columns": {
+                "type": "array",
+                "title": "Derived Columns",
+                "format": "table",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "column_name": {
+                      "title": "Column Name",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "column_data_type": {
+                      "type": "string",
+                      "title": "Column Data Type",
+                      "enum": [
+                        "STRING",
+                        "FLOAT64",
+                        "INTEGER",
+                        "TIMESTAMP",
+                        "BOOLEAN",
+                        "DATE"
+                      ]
+                    },
+                    "expression": {
+                      "type": "string",
+                      "title": "Expression",
+                      "format": "sql"
+                    }
+                  }
+                },
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "filters": {
+                "type": "string",
+                "title": "Filters",
+                "format": "sql",
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "deduplication": {
+                "type": "object",
+                "title": "Deduplication",
+                "format": "grid",
+                "properties": {
+                  "deduplication_type": {
+                    "title": "Deduplication Type",
+                    "type": "string",
+                    "enum": ["Select", "Row Partition", "Group by"],
+                    "default": "Select"
+                  },
+                  "row_partition": {
+                    "type": "object",
+                    "title": "Row Partition",
+                    "format": "grid-strict",
+                    "properties": {
+                      "columns": {
+                        "type": "array",
+                        "title": "Id Columns",
+                        "uniqueItems": true,
+                        "format": "table",
+                        "items": {
+                          "type": "string",
+                          "enumSource": "select_columns",
+                          "watch": {
+                            "select_columns": "interim.selected_columns"
+                          }
+                        },
+                        "options": {
+                          "grid_columns": 4
+                        }
+                      },
+                      "orderby": {
+                        "type": "array",
+                        "title": "Order by Columns",
+                        "uniqueItems": true,
+                        "format": "table",
+                        "items": {
+                          "type": "string",
+                          "enumSource": "select_columns",
+                          "watch": {
+                            "select_columns": "interim.selected_columns"
+                          }
+                        }
+                      },
+                      "order": {
+                        "type": "string",
+                        "title": "Order",
+                        "enum": ["ASC", "DESC"],
+                        "options": {
+                          "grid_columns": 3
+                        }
+                      }
+                    },
+                    "options": {
+                      "dependencies": {
+                        "deduplication_type": "Row Partition"
+                      }
+                    }
+                  },
+                  "groupby": {
+                    "type": "object",
+                    "title": "Group by",
+                    "format": "grid-strict",
+                    "properties": {
+                      "columns": {
+                        "type": "array",
+                        "format": "table",
+                        "uniqueItems": true,
+                        "items": {
+                          "type": "string",
+                          "enumSource": "select_columns",
+                          "watch": {
+                            "select_columns": "interim.selected_columns"
+                          }
+                        },
+                        "options": {
+                          "grid_columns": 3
+                        }
+                      },
+                      "column_aggregation": {
+                        "type": "object",
+                        "title": "Column mapping with aggregation function",
+                        "additionalProperties": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "properties": {
+                          "SUM": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "options": {
+                          "grid_columns": 3
+                        }
+                      },
+                      "default_aggregate_function": {
+                        "title": "Default Aggregate Function",
+                        "type": "string",
+                        "enum": [
+                          "COUNT",
+                          "SUM",
+                          "AVG",
+                          "MIN",
+                          "MAX",
+                          "ARRAY_AGG",
+                          "STRING_AGG"
+                        ],
+                        "default": "STRING_AGG",
+                        "options": {
+                          "grid_columns": 3
+                        }
+                      }
+                    },
+                    "options": {
+                      "dependencies": {
+                        "deduplication_type": "Group by"
+                      }
+                    }
+                  }
+                },
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "merge_condition": {
+                "type": "string",
+                "title": "Merge Condition",
+                "format": "sql",
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "merge_type": {
+                "type": "array",
+                "title": "Merge Type",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": ["UPDATE", "INSERT"]
+                },
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
               }
-            ],
-            "propertyOrder": 11
+            }
           },
-          "Hospital": {
-            "type": "string",
-            "format": "text",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 9
-          },
-          "_localId": {
-            "type": "string",
+          "recon": {
+            "title": "Recon Configuration",
+            "type": "object",
+            "id": "recon",
             "options": {
-              "hidden": true
+              "collapsed": true
             },
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
-          },
-          "Involvment": {
-            "enum": [
-              "Pedestrian",
-              "Witness",
-              "Passenger",
-              "Driver"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 10
-          },
-          "Driver error": {
-            "enum": [
-              "Fatigued/asleep",
-              "Inattentive",
-              "Too fast",
-              "Too close",
-              "No signal",
-              "Bad overtaking",
-              "Bad turning",
-              "Using cell phone"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 6
-          },
-          "Alcohol/drugs": {
-            "enum": [
-              "Alcohol suspected",
-              "Drugs suspected"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 7
-          },
-          "License number": {
-            "type": "string",
-            "format": "text",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 2
-          },
-          "Seat belt/helmet": {
-            "enum": [
-              "Seat belt/helmet worn",
-              "Not worn",
-              "Not worn correctly"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 8
+            "properties": {
+              "selection": {
+                "type": "object",
+                "id": "selection",
+                "properties": {
+                  "selected_columns": {
+                    "type": "array",
+                    "format": "table",
+                    "title": "Selected Columns",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "renamed_columns": {
+                    "type": "array",
+                    "format": "table",
+                    "title": "Renamed Columns",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "old_column_name": {
+                          "title": "Old Column Name",
+                          "type": "string",
+                          "enumSource": "select_columns",
+                          "watch": {
+                            "select_columns": "selection.selected_columns"
+                          }
+                        },
+                        "new_column_name": {
+                          "title": "New Column Name",
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  "derived_columns": {
+                    "type": "array",
+                    "title": "Derived Columns",
+                    "format": "table",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "column_name": {
+                          "title": "Column Name",
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "column_data_type": {
+                          "type": "string",
+                          "title": "Column Data Type",
+                          "enum": [
+                            "STRING",
+                            "FLOAT64",
+                            "INTEGER",
+                            "TIMESTAMP",
+                            "BOOLEAN",
+                            "DATE"
+                          ]
+                        },
+                        "expression": {
+                          "type": "string",
+                          "title": "Expression",
+                          "format": "sql"
+                        }
+                      }
+                    }
+                  },
+                  "column_prefix": {
+                    "type": "string",
+                    "title": "Column Prefix"
+                  },
+                  "exclude_prefix": {
+                    "type": "array",
+                    "title": "Columns to exclude Prefix",
+                    "items": {
+                      "type": "string",
+                      "enumSource": "select_columns",
+                      "watch": {
+                        "select_columns": "selection.selected_columns",
+                        "derived_columns_list": "selection.derived_columns.column_name"
+                      }
+                    }
+                  },
+                  "filters": {
+                    "type": "string",
+                    "title": "Filters",
+                    "format": "sql"
+                  },
+                  "deduplication": {
+                    "type": "object",
+                    "title": "Deduplication",
+                    "format": "grid",
+                    "properties": {
+                      "deduplication_type": {
+                        "title": "Deduplication Type",
+                        "type": "string",
+                        "enum": ["Select", "Row Partition", "Group by"],
+                        "default": "Select"
+                      },
+                      "row_partition": {
+                        "type": "object",
+                        "title": "Row Partition",
+                        "format": "grid-strict",
+                        "properties": {
+                          "columns": {
+                            "type": "array",
+                            "title": "Id Columns",
+                            "uniqueItems": true,
+                            "format": "table",
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "selection.selected_columns"
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 4
+                            }
+                          },
+                          "orderby": {
+                            "type": "array",
+                            "title": "Order by Columns",
+                            "uniqueItems": true,
+                            "format": "table",
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "selection.selected_columns"
+                              }
+                            }
+                          },
+                          "order": {
+                            "type": "string",
+                            "title": "Order",
+                            "enum": ["ASC", "DESC"],
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          }
+                        },
+                        "options": {
+                          "dependencies": {
+                            "deduplication_type": "Row Partition"
+                          }
+                        }
+                      },
+                      "groupby": {
+                        "type": "object",
+                        "title": "Group by",
+                        "format": "grid-strict",
+                        "properties": {
+                          "columns": {
+                            "type": "array",
+                            "format": "table",
+                            "uniqueItems": true,
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "interim.selected_columns"
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          },
+                          "column_aggregation": {
+                            "type": "object",
+                            "title": "Column mapping with aggregation function",
+                            "additionalProperties": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "properties": {
+                              "SUM": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          },
+                          "default_aggregate_function": {
+                            "title": "Default Aggregate Function",
+                            "type": "string",
+                            "enum": [
+                              "COUNT",
+                              "SUM",
+                              "AVG",
+                              "MIN",
+                              "MAX",
+                              "ARRAY_AGG",
+                              "STRING_AGG"
+                            ],
+                            "default": "STRING_AGG",
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          }
+                        },
+                        "options": {
+                          "dependencies": {
+                            "deduplication_type": "Group by"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "merge_condition": {
+                "type": "string",
+                "title": "Merge Condition",
+                "format": "sql"
+              },
+              "merge_type": {
+                "type": "array",
+                "title": "Merge Type",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": ["UPDATE", "INSERT"]
+                }
+              }
+            }
           }
-        },
-        "definitions": {},
-        "description": "A person involved in the accident",
-        "plural_title": "People"
-      },
-      "vehicle": {
-        "type": "object",
-        "title": "Vehicle",
-        "multiple": true,
-        "required": [
-          "_localId"
-        ],
-        "properties": {
-          "Make": {
-            "type": "string",
-            "format": "text",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 1
-          },
-          "Model": {
-            "type": "string",
-            "format": "text",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 2
-          },
-          "Damage": {
-            "enum": [
-              "None",
-              "Front",
-              "Rear",
-              "Right",
-              "Left",
-              "Roof",
-              "Multiple"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 11
-          },
-          "Defect": {
-            "enum": [
-              "None",
-              "Lights",
-              "Brakes",
-              "Steering",
-              "Tires",
-              "Multiple"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 10
-          },
-          "Loading": {
-            "enum": [
-              "Legal",
-              "Over loaded",
-              "Unsafe load"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 8
-          },
-          "Maneuver": {
-            "enum": [
-              "Left turn",
-              "Right turn",
-              "\"U\" turn",
-              "Cross traffic",
-              "Merging",
-              "Diverging",
-              "Overtaking",
-              "Going ahead",
-              "Reversing",
-              "Sudden start",
-              "Sudden stop",
-              "Parked off road",
-              "Parked on road"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 7
-          },
-          "_localId": {
-            "type": "string",
-            "options": {
-              "hidden": true
-            },
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
-          },
-          "Direction": {
-            "enum": [
-              "North",
-              "South",
-              "East",
-              "West"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 9
-          },
-          "Plate number": {
-            "type": "string",
-            "format": "text",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 3
-          },
-          "Vehicle type": {
-            "enum": [
-              "Bicycle",
-              "Pedicab",
-              "Motorcycle",
-              "Tricycle",
-              "Car",
-              "Jeepney",
-              "Bus",
-              "Truck (Rigid)",
-              "Truck (Artic)",
-              "Van",
-              "Animal"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 0
-          },
-          "Engine number": {
-            "type": "string",
-            "format": "text",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 5
-          },
-          "Chassis number": {
-            "type": "string",
-            "format": "text",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 4
-          },
-          "Insurance details": {
-            "type": "string",
-            "format": "textarea",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 6
-          }
-        },
-        "definitions": {},
-        "description": "A vehicle involved in the accident",
-        "plural_title": "Vehicles"
-      },
-      "accidentDetails": {
-        "type": "object",
-        "title": "Accident Details",
-        "details": true,
-        "multiple": false,
-        "required": [
-          "_localId"
-        ],
-        "properties": {
-          "Severity": {
-            "enum": [
-              "Fatal",
-              "Injury",
-              "Property"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": true,
-            "propertyOrder": 0
-          },
-          "_localId": {
-            "type": "string",
-            "options": {
-              "hidden": true
-            },
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
-          },
-          "Main cause": {
-            "enum": [
-              "Vehicle defect",
-              "Road defect",
-              "Human error"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": true,
-            "propertyOrder": 1
-          },
-          "Description": {
-            "type": "string",
-            "format": "textarea",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 3
-          },
-          "Num vehicles": {
-            "type": "string",
-            "format": "number",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 5
-          },
-          "Surface type": {
-            "enum": [
-              "Concrete",
-              "Asphalt",
-              "Gravel",
-              "Earth"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 12
-          },
-          "Street lights": {
-            "enum": [
-              "Lit",
-              "Unlit"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 10
-          },
-          "Collision type": {
-            "enum": [
-              "Head on",
-              "Rear end",
-              "Right angle",
-              "Side swipe",
-              "Overturned vehicle",
-              "Hit object in road",
-              "Hit object off road",
-              "Hit parked vehicle",
-              "Hit pedestrian",
-              "Hit animal"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": true,
-            "propertyOrder": 2
-          },
-          "Traffic control": {
-            "enum": [
-              "None",
-              "Centerline",
-              "Pedestrian crossing",
-              "School crossing",
-              "Police controlled",
-              "Traffic lights",
-              "Stop sign",
-              "Give way"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 8
-          },
-          "Surface condition": {
-            "enum": [
-              "Dry",
-              "Wet",
-              "Muddy",
-              "Flooded"
-            ],
-            "type": "string",
-            "fieldType": "selectlist",
-            "displayType": "select",
-            "isSearchable": false,
-            "propertyOrder": 11
-          },
-          "Num driver casualties": {
-            "type": "string",
-            "format": "number",
-            "fieldType": "text",
-            "isSearchable": true,
-            "propertyOrder": 4
-          },
-          "Num passenger casualties": {
-            "type": "string",
-            "format": "number",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 6
-          },
-          "Num pedestrian casualties": {
-            "type": "string",
-            "format": "number",
-            "fieldType": "text",
-            "isSearchable": false,
-            "propertyOrder": 7
-          }
-        },
-        "definitions": {},
-        "description": "Details for Accident",
-        "plural_title": "Accident Details",
-        "propertyOrder": 0
+        }
       }
     },
-    "description": "",
-    "plural_title": ""
-  },
-  "startval": {
-    "photo": [],
-    "person": [],
-    "vehicle": [],
-    "accidentDetails": {
-      "Severity": "Fatal",
-      "_localId": "162d62fe-46ee-468e-88cf-c827c8a05247",
-      "Main cause": "Vehicle defect",
-      "Description": "",
-      "Num vehicles": "",
-      "Surface type": "Concrete",
-      "Street lights": "Lit",
-      "Collision type": "Head on",
-      "Traffic control": "None",
-      "Surface condition": "Dry",
-      "Num driver casualties": "",
-      "Num passenger casualties": "",
-      "Num pedestrian casualties": ""
+    "aggregated_sources": {
+      "type": "array",
+      "title": "Aggregated Sources",
+      "options": {
+        "compact": true,
+        "disable_collapse": true
+      },
+      "items": {
+        "type": "object",
+        "title": "Aggregated Source",
+        "properties": {
+          "sources": {
+            "type": "array",
+            "title": "Select Sources",
+            "items": {
+              "type": "string",
+              "enumSource": "source_names",
+              "watch": {
+                "source_names": "sources_id"
+              }
+            }
+          },
+          "recon": {
+            "title": "Recon Configuration",
+            "type": "object",
+            "id": "recon",
+            "options": {
+              "collapsed": true
+            },
+            "properties": {
+              "selection": {
+                "type": "object",
+                "id": "selection",
+                "properties": {
+                  "selected_columns": {
+                    "type": "array",
+                    "format": "table",
+                    "title": "Selected Columns",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "renamed_columns": {
+                    "type": "array",
+                    "format": "table",
+                    "title": "Renamed Columns",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "old_column_name": {
+                          "title": "Old Column Name",
+                          "type": "string",
+                          "enumSource": "select_columns",
+                          "watch": {
+                            "select_columns": "selection.selected_columns"
+                          }
+                        },
+                        "new_column_name": {
+                          "title": "New Column Name",
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  "derived_columns": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "column_prefix": {
+                    "type": "string",
+                    "title": "Column Prefix"
+                  },
+                  "exclude_prefix": {
+                    "type": "array",
+                    "title": "Columns to exclude Prefix",
+                    "items": {
+                      "type": "string",
+                      "enumSource": "select_columns",
+                      "watch": {
+                        "select_columns": "selection.selected_columns",
+                        "renamed_columns": "selection.renamed_columns.new_column_name",
+                        "derived_columns": "selection.derived_columns.column_name"
+                      }
+                    }
+                  },
+                  "filters": {
+                    "type": "string",
+                    "title": "Filters",
+                    "format": "sql"
+                  },
+                  "deduplication": {
+                    "type": "object",
+                    "title": "Deduplication",
+                    "format": "grid",
+                    "properties": {
+                      "deduplication_type": {
+                        "title": "Deduplication Type",
+                        "type": "string",
+                        "enum": ["Select", "Row Partition", "Group by"],
+                        "default": "Select"
+                      },
+                      "row_partition": {
+                        "type": "object",
+                        "title": "Row Partition",
+                        "format": "grid-strict",
+                        "properties": {
+                          "columns": {
+                            "type": "array",
+                            "title": "Id Columns",
+                            "uniqueItems": true,
+                            "format": "table",
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "selection.selected_columns"
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 4
+                            }
+                          },
+                          "orderby": {
+                            "type": "array",
+                            "title": "Order by Columns",
+                            "uniqueItems": true,
+                            "format": "table",
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "selection.selected_columns"
+                              }
+                            }
+                          },
+                          "order": {
+                            "type": "string",
+                            "title": "Order",
+                            "enum": ["ASC", "DESC"],
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          }
+                        },
+                        "options": {
+                          "dependencies": {
+                            "deduplication_type": "Row Partition"
+                          }
+                        }
+                      },
+                      "groupby": {
+                        "type": "object",
+                        "title": "Group by",
+                        "format": "grid-strict",
+                        "properties": {
+                          "columns": {
+                            "type": "array",
+                            "format": "table",
+                            "uniqueItems": true,
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "interim.selected_columns"
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          },
+                          "column_aggregation": {
+                            "type": "object",
+                            "title": "Column mapping with aggregation function",
+                            "additionalProperties": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "properties": {
+                              "SUM": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          },
+                          "default_aggregate_function": {
+                            "title": "Default Aggregate Function",
+                            "type": "string",
+                            "enum": [
+                              "COUNT",
+                              "SUM",
+                              "AVG",
+                              "MIN",
+                              "MAX",
+                              "ARRAY_AGG",
+                              "STRING_AGG"
+                            ],
+                            "default": "STRING_AGG",
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          }
+                        },
+                        "options": {
+                          "dependencies": {
+                            "deduplication_type": "Group by"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "merge_condition": {
+                "type": "string",
+                "title": "Merge Condition",
+                "format": "sql"
+              },
+              "merge_type": {
+                "type": "array",
+                "title": "Merge Type",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": ["UPDATE", "INSERT"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "flags": {
+      "type": "object",
+      "title": "Flags",
+      "options": {
+        "disable_collapse": true,
+        "disable_properties": true
+      },
+      "properties": {
+        "recon_flag": {
+          "type": "object",
+          "title": "Recon Flag Configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "prefix": {
+              "type": "string",
+              "options": {
+                "dependencies": {
+                  "enabled": true
+                }
+              }
+            },
+            "expression_value_mapping": {
+              "type": "object",
+              "title": "Expression Value Mapping",
+              "options": {
+                "dependencies": {
+                  "enabled": true
+                }
+              }
+            }
+          },
+          "options": {
+            "collapsed": true
+          }
+        },
+        "other_flags": {
+          "type": "array",
+          "title": "Other Flag Configuration",
+          "items": {
+            "type": "object",
+            "title": "Flag",
+            "properties": {
+              "column_name": {
+                "type": "string",
+                "title": "Flag Name"
+              },
+              "column_data_type": {
+                "type": "string",
+                "title": "Flag Column Data Type",
+                "enum": [
+                  "STRING",
+                  "FLOAT64",
+                  "INTEGER",
+                  "TIMESTAMP",
+                  "BOOLEAN",
+                  "DATE"
+                ]
+              },
+              "expression": {
+                "type": "string"
+              },
+              "condition": {
+                "type": "string"
+              }
+            }
+          },
+          "options": {
+            "collapsed": true
+          }
+        }
+      }
+    },
+    "truncate_snapshots": {
+      "title": "Truncate Snapshot Tables",
+      "type": "boolean"
     }
-  },
-  "config": {
-    "required_by_default": 1,
-    "no_additional_properties": 1,
-    "display_required_only": 0,
-    "keep_oneof_values": 1,
-    "ajax": 0,
-    "ajaxCredentials": 0,
-    "show_opt_in": 0,
-    "disable_edit_json": 0,
-    "disable_collapse": 0,
-    "disable_properties": 0,
-    "disable_array_add": 0,
-    "disable_array_reorder": 0,
-    "disable_array_delete": 0,
-    "enable_array_copy": 0,
-    "array_controls_top": 0,
-    "disable_array_delete_all_rows": 0,
-    "disable_array_delete_last_row": 0,
-    "prompt_before_delete": 1,
-    "lib_aceeditor": 0,
-    "lib_sceditor": 0,
-    "lib_simplemde": 0,
-    "lib_select2": 0,
-    "lib_selectize": 0,
-    "lib_flatpickr": 0,
-    "lib_signaturepad": 0,
-    "lib_mathjs": 0,
-    "lib_cleavejs": 0,
-    "lib_jquery": 0,
-    "lib_dompurify": 1
-  },
-  "style": "",
-  "code": "// The following lines are mandatory and readonly. You can add custom code above and below.\nif (jseditor instanceof window.JSONEditor) jseditor.destroy();\njseditor = new window.JSONEditor(document.querySelector(\"#json-editor-form\"), jedata);",   
-  "desc": "Add optional description here. (HTML format)"
+  }
 }
