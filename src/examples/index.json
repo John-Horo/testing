@@ -7,6 +7,10 @@
         "file": "basic"
       },
       {
+        "title": "name",
+        "file": "name"
+      },
+      {
         "title": "Array",
         "file": "array"
       },

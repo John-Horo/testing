@@ -1,0 +1,886 @@
+{
+  "title": "name",
+  "type": "object",
+  "id": "root",
+  "format": "categories",
+  "basicCategoryTitle": "Basic Configuration",
+  "options": {
+    "disable_collapse": true,
+    "disable_properties": true
+  },
+  "required": [
+    "dataset",
+    "sources",
+    "aggregated_sources",
+    "flags",
+    "truncate_snapshots"
+  ],
+  "properties": {
+    "dataset": {
+      "title": "Dataset Id",
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "type": "array",
+      "title": "Sources",
+      "id": "sources_id",
+      "options": {
+        "compact": true,
+        "disable_collapse": true
+      },
+      "items": {
+        "type": "object",
+        "title": "Source",
+        "properties": {
+          "table": {
+            "type": "string",
+            "id": "table_id",
+            "title": "Source Table Name",
+            "minLength": 1
+          },
+          "interim_table": {
+            "title": "Interim Configuration",
+            "type": "object",
+            "id": "interim",
+            "options": {
+              "collapsed": true,
+              "inputClass": "bold-title"
+            },
+            "properties": {
+              "enabled": {
+                "title": "Enable Interim Table",
+                "type": "boolean",
+                "format": "checkbox",
+                "default": false
+              },
+              "custom_table_name": {
+                "type": "string",
+                "title": "Custom Table Name",
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "selected_columns": {
+                "type": "array",
+                "format": "table",
+                "title": "Selected Columns",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "renamed_columns": {
+                "type": "array",
+                "format": "table",
+                "title": "Renamed Columns",
+                "uniqueItems": true,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "old_column_name": {
+                      "title": "Old Column Name",
+                      "type": "string",
+                      "enumSource": "select_columns",
+                      "watch": {
+                        "select_columns": "interim.selected_columns"
+                      }
+                    },
+                    "new_column_name": {
+                      "title": "New Column Name",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "derived_columns": {
+                "type": "array",
+                "title": "Derived Columns",
+                "format": "table",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "column_name": {
+                      "title": "Column Name",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "column_data_type": {
+                      "type": "string",
+                      "title": "Column Data Type",
+                      "enum": [
+                        "STRING",
+                        "FLOAT64",
+                        "INTEGER",
+                        "TIMESTAMP",
+                        "BOOLEAN",
+                        "DATE"
+                      ]
+                    },
+                    "expression": {
+                      "type": "string",
+                      "title": "Expression",
+                      "format": "sql"
+                    }
+                  }
+                },
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "filters": {
+                "type": "string",
+                "title": "Filters",
+                "format": "sql",
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "deduplication": {
+                "type": "object",
+                "title": "Deduplication",
+                "format": "grid",
+                "properties": {
+                  "deduplication_type": {
+                    "title": "Deduplication Type",
+                    "type": "string",
+                    "enum": ["Select", "Row Partition", "Group by"],
+                    "default": "Select"
+                  },
+                  "row_partition": {
+                    "type": "object",
+                    "title": "Row Partition",
+                    "format": "grid-strict",
+                    "properties": {
+                      "columns": {
+                        "type": "array",
+                        "title": "Id Columns",
+                        "uniqueItems": true,
+                        "format": "table",
+                        "items": {
+                          "type": "string",
+                          "enumSource": "select_columns",
+                          "watch": {
+                            "select_columns": "interim.selected_columns"
+                          }
+                        },
+                        "options": {
+                          "grid_columns": 4
+                        }
+                      },
+                      "orderby": {
+                        "type": "array",
+                        "title": "Order by Columns",
+                        "uniqueItems": true,
+                        "format": "table",
+                        "items": {
+                          "type": "string",
+                          "enumSource": "select_columns",
+                          "watch": {
+                            "select_columns": "interim.selected_columns"
+                          }
+                        }
+                      },
+                      "order": {
+                        "type": "string",
+                        "title": "Order",
+                        "enum": ["ASC", "DESC"],
+                        "options": {
+                          "grid_columns": 3
+                        }
+                      }
+                    },
+                    "options": {
+                      "dependencies": {
+                        "deduplication_type": "Row Partition"
+                      }
+                    }
+                  },
+                  "groupby": {
+                    "type": "object",
+                    "title": "Group by",
+                    "format": "grid-strict",
+                    "properties": {
+                      "columns": {
+                        "type": "array",
+                        "format": "table",
+                        "uniqueItems": true,
+                        "items": {
+                          "type": "string",
+                          "enumSource": "select_columns",
+                          "watch": {
+                            "select_columns": "interim.selected_columns"
+                          }
+                        },
+                        "options": {
+                          "grid_columns": 3
+                        }
+                      },
+                      "column_aggregation": {
+                        "type": "object",
+                        "title": "Column mapping with aggregation function",
+                        "additionalProperties": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "properties": {
+                          "SUM": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "options": {
+                          "grid_columns": 3
+                        }
+                      },
+                      "default_aggregate_function": {
+                        "title": "Default Aggregate Function",
+                        "type": "string",
+                        "enum": [
+                          "COUNT",
+                          "SUM",
+                          "AVG",
+                          "MIN",
+                          "MAX",
+                          "ARRAY_AGG",
+                          "STRING_AGG"
+                        ],
+                        "default": "STRING_AGG",
+                        "options": {
+                          "grid_columns": 3
+                        }
+                      }
+                    },
+                    "options": {
+                      "dependencies": {
+                        "deduplication_type": "Group by"
+                      }
+                    }
+                  }
+                },
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "merge_condition": {
+                "type": "string",
+                "title": "Merge Condition",
+                "format": "sql",
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              },
+              "merge_type": {
+                "type": "array",
+                "title": "Merge Type",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": ["UPDATE", "INSERT"]
+                },
+                "options": {
+                  "dependencies": {
+                    "enabled": true
+                  }
+                }
+              }
+            }
+          },
+          "recon": {
+            "title": "Recon Configuration",
+            "type": "object",
+            "id": "recon",
+            "options": {
+              "collapsed": true
+            },
+            "properties": {
+              "selection": {
+                "type": "object",
+                "id": "selection",
+                "properties": {
+                  "selected_columns": {
+                    "type": "array",
+                    "format": "table",
+                    "title": "Selected Columns",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "renamed_columns": {
+                    "type": "array",
+                    "format": "table",
+                    "title": "Renamed Columns",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "old_column_name": {
+                          "title": "Old Column Name",
+                          "type": "string",
+                          "enumSource": "select_columns",
+                          "watch": {
+                            "select_columns": "selection.selected_columns"
+                          }
+                        },
+                        "new_column_name": {
+                          "title": "New Column Name",
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  "derived_columns": {
+                    "type": "array",
+                    "title": "Derived Columns",
+                    "format": "table",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "column_name": {
+                          "title": "Column Name",
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "column_data_type": {
+                          "type": "string",
+                          "title": "Column Data Type",
+                          "enum": [
+                            "STRING",
+                            "FLOAT64",
+                            "INTEGER",
+                            "TIMESTAMP",
+                            "BOOLEAN",
+                            "DATE"
+                          ]
+                        },
+                        "expression": {
+                          "type": "string",
+                          "title": "Expression",
+                          "format": "sql"
+                        }
+                      }
+                    }
+                  },
+                  "column_prefix": {
+                    "type": "string",
+                    "title": "Column Prefix"
+                  },
+                  "exclude_prefix": {
+                    "type": "array",
+                    "title": "Columns to exclude Prefix",
+                    "items": {
+                      "type": "string",
+                      "enumSource": "select_columns",
+                      "watch": {
+                        "select_columns": "selection.selected_columns",
+                        "derived_columns_list": "selection.derived_columns.column_name"
+                      }
+                    }
+                  },
+                  "filters": {
+                    "type": "string",
+                    "title": "Filters",
+                    "format": "sql"
+                  },
+                  "deduplication": {
+                    "type": "object",
+                    "title": "Deduplication",
+                    "format": "grid",
+                    "properties": {
+                      "deduplication_type": {
+                        "title": "Deduplication Type",
+                        "type": "string",
+                        "enum": ["Select", "Row Partition", "Group by"],
+                        "default": "Select"
+                      },
+                      "row_partition": {
+                        "type": "object",
+                        "title": "Row Partition",
+                        "format": "grid-strict",
+                        "properties": {
+                          "columns": {
+                            "type": "array",
+                            "title": "Id Columns",
+                            "uniqueItems": true,
+                            "format": "table",
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "selection.selected_columns"
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 4
+                            }
+                          },
+                          "orderby": {
+                            "type": "array",
+                            "title": "Order by Columns",
+                            "uniqueItems": true,
+                            "format": "table",
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "selection.selected_columns"
+                              }
+                            }
+                          },
+                          "order": {
+                            "type": "string",
+                            "title": "Order",
+                            "enum": ["ASC", "DESC"],
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          }
+                        },
+                        "options": {
+                          "dependencies": {
+                            "deduplication_type": "Row Partition"
+                          }
+                        }
+                      },
+                      "groupby": {
+                        "type": "object",
+                        "title": "Group by",
+                        "format": "grid-strict",
+                        "properties": {
+                          "columns": {
+                            "type": "array",
+                            "format": "table",
+                            "uniqueItems": true,
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "interim.selected_columns"
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          },
+                          "column_aggregation": {
+                            "type": "object",
+                            "title": "Column mapping with aggregation function",
+                            "additionalProperties": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "properties": {
+                              "SUM": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          },
+                          "default_aggregate_function": {
+                            "title": "Default Aggregate Function",
+                            "type": "string",
+                            "enum": [
+                              "COUNT",
+                              "SUM",
+                              "AVG",
+                              "MIN",
+                              "MAX",
+                              "ARRAY_AGG",
+                              "STRING_AGG"
+                            ],
+                            "default": "STRING_AGG",
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          }
+                        },
+                        "options": {
+                          "dependencies": {
+                            "deduplication_type": "Group by"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "merge_condition": {
+                "type": "string",
+                "title": "Merge Condition",
+                "format": "sql"
+              },
+              "merge_type": {
+                "type": "array",
+                "title": "Merge Type",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": ["UPDATE", "INSERT"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "aggregated_sources": {
+      "type": "array",
+      "title": "Aggregated Sources",
+      "options": {
+        "compact": true,
+        "disable_collapse": true
+      },
+      "items": {
+        "type": "object",
+        "title": "Aggregated Source",
+        "properties": {
+          "sources": {
+            "type": "array",
+            "title": "Select Sources",
+            "items": {
+              "type": "string",
+              "enumSource": "source_names",
+              "watch": {
+                "source_names": "sources_id"
+              }
+            }
+          },
+          "recon": {
+            "title": "Recon Configuration",
+            "type": "object",
+            "id": "recon",
+            "options": {
+              "collapsed": true
+            },
+            "properties": {
+              "selection": {
+                "type": "object",
+                "id": "selection",
+                "properties": {
+                  "selected_columns": {
+                    "type": "array",
+                    "format": "table",
+                    "title": "Selected Columns",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "renamed_columns": {
+                    "type": "array",
+                    "format": "table",
+                    "title": "Renamed Columns",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "old_column_name": {
+                          "title": "Old Column Name",
+                          "type": "string",
+                          "enumSource": "select_columns",
+                          "watch": {
+                            "select_columns": "selection.selected_columns"
+                          }
+                        },
+                        "new_column_name": {
+                          "title": "New Column Name",
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  "derived_columns": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "column_prefix": {
+                    "type": "string",
+                    "title": "Column Prefix"
+                  },
+                  "exclude_prefix": {
+                    "type": "array",
+                    "title": "Columns to exclude Prefix",
+                    "items": {
+                      "type": "string",
+                      "enumSource": "select_columns",
+                      "watch": {
+                        "select_columns": "selection.selected_columns",
+                        "renamed_columns": "selection.renamed_columns.new_column_name",
+                        "derived_columns": "selection.derived_columns.column_name"
+                      }
+                    }
+                  },
+                  "filters": {
+                    "type": "string",
+                    "title": "Filters",
+                    "format": "sql"
+                  },
+                  "deduplication": {
+                    "type": "object",
+                    "title": "Deduplication",
+                    "format": "grid",
+                    "properties": {
+                      "deduplication_type": {
+                        "title": "Deduplication Type",
+                        "type": "string",
+                        "enum": ["Select", "Row Partition", "Group by"],
+                        "default": "Select"
+                      },
+                      "row_partition": {
+                        "type": "object",
+                        "title": "Row Partition",
+                        "format": "grid-strict",
+                        "properties": {
+                          "columns": {
+                            "type": "array",
+                            "title": "Id Columns",
+                            "uniqueItems": true,
+                            "format": "table",
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "selection.selected_columns"
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 4
+                            }
+                          },
+                          "orderby": {
+                            "type": "array",
+                            "title": "Order by Columns",
+                            "uniqueItems": true,
+                            "format": "table",
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "selection.selected_columns"
+                              }
+                            }
+                          },
+                          "order": {
+                            "type": "string",
+                            "title": "Order",
+                            "enum": ["ASC", "DESC"],
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          }
+                        },
+                        "options": {
+                          "dependencies": {
+                            "deduplication_type": "Row Partition"
+                          }
+                        }
+                      },
+                      "groupby": {
+                        "type": "object",
+                        "title": "Group by",
+                        "format": "grid-strict",
+                        "properties": {
+                          "columns": {
+                            "type": "array",
+                            "format": "table",
+                            "uniqueItems": true,
+                            "items": {
+                              "type": "string",
+                              "enumSource": "select_columns",
+                              "watch": {
+                                "select_columns": "interim.selected_columns"
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          },
+                          "column_aggregation": {
+                            "type": "object",
+                            "title": "Column mapping with aggregation function",
+                            "additionalProperties": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "properties": {
+                              "SUM": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          },
+                          "default_aggregate_function": {
+                            "title": "Default Aggregate Function",
+                            "type": "string",
+                            "enum": [
+                              "COUNT",
+                              "SUM",
+                              "AVG",
+                              "MIN",
+                              "MAX",
+                              "ARRAY_AGG",
+                              "STRING_AGG"
+                            ],
+                            "default": "STRING_AGG",
+                            "options": {
+                              "grid_columns": 3
+                            }
+                          }
+                        },
+                        "options": {
+                          "dependencies": {
+                            "deduplication_type": "Group by"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "merge_condition": {
+                "type": "string",
+                "title": "Merge Condition",
+                "format": "sql"
+              },
+              "merge_type": {
+                "type": "array",
+                "title": "Merge Type",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": ["UPDATE", "INSERT"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "flags": {
+      "type": "object",
+      "title": "Flags",
+      "options": {
+        "disable_collapse": true,
+        "disable_properties": true
+      },
+      "properties": {
+        "recon_flag": {
+          "type": "object",
+          "title": "Recon Flag Configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "prefix": {
+              "type": "string",
+              "options": {
+                "dependencies": {
+                  "enabled": true
+                }
+              }
+            },
+            "expression_value_mapping": {
+              "type": "object",
+              "title": "Expression Value Mapping",
+              "options": {
+                "dependencies": {
+                  "enabled": true
+                }
+              }
+            }
+          },
+          "options": {
+            "collapsed": true
+          }
+        },
+        "other_flags": {
+          "type": "array",
+          "title": "Other Flag Configuration",
+          "items": {
+            "type": "object",
+            "title": "Flag",
+            "properties": {
+              "column_name": {
+                "type": "string",
+                "title": "Flag Name"
+              },
+              "column_data_type": {
+                "type": "string",
+                "title": "Flag Column Data Type",
+                "enum": [
+                  "STRING",
+                  "FLOAT64",
+                  "INTEGER",
+                  "TIMESTAMP",
+                  "BOOLEAN",
+                  "DATE"
+                ]
+              },
+              "expression": {
+                "type": "string"
+              },
+              "condition": {
+                "type": "string"
+              }
+            }
+          },
+          "options": {
+            "collapsed": true
+          }
+        }
+      }
+    },
+    "truncate_snapshots": {
+      "title": "Truncate Snapshot Tables",
+      "type": "boolean"
+    }
+  }
+}
