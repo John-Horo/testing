@@ -259,7 +259,7 @@
   var jeRightPanel = document.querySelector('#slideright-panel')
 
   // Buttons
-  var jeShowConfig = document.querySelector('#show-config') // Show config panel
+  // var jeShowConfig = document.querySelector('#show-config') // Show config panel
   var jeShowLoadExample = document.querySelector('#show-load-examples') // Show load examples panel
   var jeSchemaLoad = document.querySelector('#external-schema') // Load schema
   var jeExec = document.querySelector('#execute-code') // Create form from Schema
@@ -1338,7 +1338,7 @@
 
   // Set handler for showing/hiding left panel
   var panelLeftHandler = setPanelHandler(jeLeftPanel)
-  jeShowConfig.addEventListener('click', panelLeftHandler, false)
+  // jeShowConfig.addEventListener('click', panelLeftHandler, false)
 
   // Set handler for showing/hiding left panel
   var panelRightHandler = setPanelHandler(jeRightPanel)
@@ -1356,9 +1356,9 @@
   // Set button event for generating form
   jeExec.addEventListener('click', generateForm, false)
 
-  jeFilesUsed.addEventListener('click', listExternalFilesUsed, false)
+  // jeFilesUsed.addEventListener('click', listExternalFilesUsed, false)
   // Create the direct link URL
-  jeDirectLink.addEventListener('click', updateDirectLink, false)
+  // jeDirectLink.addEventListener('click', updateDirectLink, false)
   jeUrlReset.addEventListener('click', resetUrl, false)
 
   // Set button event for downloading as example

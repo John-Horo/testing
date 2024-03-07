@@ -1,69 +1,12 @@
 [
   {
-    "group": "General Examples",
+    "group": "Configuration",
     "items": [
-      {
-        "title": "Basic Usage",
-        "file": "basic"
-      },
-      {
-        "title": "name",
-        "file": "name"
-      },
-      {
-        "title": "Array",
-        "file": "array"
-      },
-      {
-        "title": "Advanced Usage (Ajax)",
-        "file": "advanced"
-      },
-      {
-        "title": "Basic Person (Ajax schema)",
-        "file": "advanced-basic-person"
-      },
-      {
-        "title": "Person (Ajax schema)",
-        "file": "advanced-person"
-      },
+   
       {
         "title": "Default Configuration",
         "file": "accident-details"
-      },
-      {
-        "title": "Recursive",
-        "file": "recursive"
-      },
-      {
-        "title": "Complex schema that express a node tree",
-        "file": "complex-schema"
-      },
-      {
-        "title": "Payment Method (oneOf)",
-        "file": "oneof-payment-method"
-      },
-      {
-        "title": "Name (oneOf)",
-        "file": "oneof-name"
-      },
-      {
-        "title": "Dependencies",
-        "file": "dependencies"
-      },
-      {
-        "title": "Bookstore Schema",
-        "file": "bookstore"
-      },
-      {
-        "title": "JSON Representation of a Europass Document",
-        "file": "europass"
-      },
-      {
-        "title": "Two Column Layout",
-        "file": "two-column-layout"
       }
     ]
   }
-
-
 ]
