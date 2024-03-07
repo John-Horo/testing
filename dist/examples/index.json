@@ -69,11 +69,11 @@
     "items": [
       {
         "title": "ACE Editor",
-        "file": "aceeditor"
+        "file": "name"
       },
       {
         "title": "Autocomplete Editor",
-        "file": "autocomplete"
+        "file": "accident-details"
       },
       {
         "title": "Base64 (Multiple Upload)",
