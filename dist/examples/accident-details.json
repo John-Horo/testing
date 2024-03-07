@@ -859,30 +859,14 @@
     }
   }
 },
-  "startval": {
-    "fruits": [
-      "apple",
-      "orange",
-      "pear"
-    ],
-    "vegetables": [
-      {
-        "veggieName": "potato",
-        "veggieLike": true
-      },
-      {
-        "veggieName": "broccoli",
-        "veggieLike": false
-      }
-    ]
-  },
+  "startval": {},
   "config": {
     "required_by_default": 1,
     "no_additional_properties": 0,
     "display_required_only": 0,
     "keep_oneof_values": 0,
-    "ajax": 0,
-    "ajaxCredentials": 0,
+    "ajax": 1,
+    "ajaxCredentials": 1,
     "show_opt_in": 0,
     "disable_edit_json": 0,
     "disable_collapse": 0,
