@@ -667,7 +667,7 @@
   var updateFromFile = function (response) {
     var example = JSON.parse(response),
       schema = JSON.stringify(example.schema, null, 2),
-      startval = Object.keys(example.startval).length !== 0 ? JSON.stringify(example.startval, null, 2) : '',
+      startval = Object.keys(example.startval || "").length !== 0 ? JSON.stringify(example.startval, null, 2) : '',
       cfg = example.config,
       code = example.code,
       style = example.style,
