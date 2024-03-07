@@ -1,10 +1,11 @@
 {
   "title": "Default Configuration",
+  "schema": {
+  "title": "Recon Configuration",
   "type": "object",
-  "id": "root",
+  "id":"root",
   "format": "categories",
   "basicCategoryTitle": "Basic Configuration",
-  "desc": "Add optional description here. (HTML format)",
   "options": {
     "disable_collapse": true,
     "disable_properties": true
@@ -18,17 +19,17 @@
   ],
   "properties": {
     "dataset": {
-      "title": "Dataset Id",
+      "title":"Dataset Id",
       "type": "string",
-      "minLength": 1
+      "minLength":1
     },
     "sources": {
       "type": "array",
-      "title": "Sources",
-      "id": "sources_id",
-      "options": {
-        "compact": true,
-        "disable_collapse": true
+      "title":"Sources",
+      "id":"sources_id",
+      "options":{
+        "compact":true,
+        "disable_collapse":true
       },
       "items": {
         "type": "object",
@@ -36,28 +37,28 @@
         "properties": {
           "table": {
             "type": "string",
-            "id": "table_id",
-            "title": "Source Table Name",
+            "id":"table_id",
+            "title":"Source Table Name",
             "minLength": 1
           },
           "interim_table": {
-            "title": "Interim Configuration",
+            "title":"Interim Configuration",
             "type": "object",
             "id": "interim",
             "options": {
               "collapsed": true,
-              "inputClass": "bold-title"
+               "inputClass": "bold-title"
             },
             "properties": {
               "enabled": {
-                "title": "Enable Interim Table",
+                "title":"Enable Interim Table",
                 "type": "boolean",
-                "format": "checkbox",
+                "format":"checkbox",
                 "default": false
               },
               "custom_table_name": {
                 "type": "string",
-                "title": "Custom Table Name",
+                "title":"Custom Table Name",
                 "options": {
                   "dependencies": {
                     "enabled": true
@@ -67,7 +68,7 @@
               "selected_columns": {
                 "type": "array",
                 "format": "table",
-                "title": "Selected Columns",
+                "title":"Selected Columns",
                 "uniqueItems": true,
                 "items": {
                   "type": "string",
@@ -82,13 +83,13 @@
               "renamed_columns": {
                 "type": "array",
                 "format": "table",
-                "title": "Renamed Columns",
+                "title":"Renamed Columns",
                 "uniqueItems": true,
                 "items": {
                   "type": "object",
                   "properties": {
                     "old_column_name": {
-                      "title": "Old Column Name",
+                      "title":"Old Column Name",
                       "type": "string",
                       "enumSource": "select_columns",
                       "watch": {
@@ -96,7 +97,7 @@
                       }
                     },
                     "new_column_name": {
-                      "title": "New Column Name",
+                      "title":"New Column Name",
                       "type": "string",
                       "minLength": 1
                     }
@@ -110,32 +111,25 @@
               },
               "derived_columns": {
                 "type": "array",
-                "title": "Derived Columns",
+                "title":"Derived Columns",
                 "format": "table",
                 "items": {
                   "type": "object",
                   "properties": {
                     "column_name": {
-                      "title": "Column Name",
+                      "title":"Column Name",
                       "type": "string",
                       "minLength": 1
                     },
                     "column_data_type": {
                       "type": "string",
-                      "title": "Column Data Type",
-                      "enum": [
-                        "STRING",
-                        "FLOAT64",
-                        "INTEGER",
-                        "TIMESTAMP",
-                        "BOOLEAN",
-                        "DATE"
-                      ]
+                      "title":"Column Data Type",
+                      "enum":["STRING","FLOAT64","INTEGER","TIMESTAMP","BOOLEAN","DATE"]
                     },
                     "expression": {
                       "type": "string",
-                      "title": "Expression",
-                      "format": "sql"
+                      "title":"Expression",
+                      "format":"sql"
                     }
                   }
                 },
@@ -148,7 +142,7 @@
               "filters": {
                 "type": "string",
                 "title": "Filters",
-                "format": "sql",
+                "format":"sql",
                 "options": {
                   "dependencies": {
                     "enabled": true
@@ -157,23 +151,23 @@
               },
               "deduplication": {
                 "type": "object",
-                "title": "Deduplication",
-                "format": "grid",
+                "title":"Deduplication",
+                "format":"grid",
                 "properties": {
-                  "deduplication_type": {
-                    "title": "Deduplication Type",
-                    "type": "string",
-                    "enum": ["Select", "Row Partition", "Group by"],
-                    "default": "Select"
+                  "deduplication_type":{
+                     "title":"Deduplication Type",
+                     "type": "string",
+                     "enum": ["Select","Row Partition","Group by"],
+                     "default":"Select"
                   },
                   "row_partition": {
                     "type": "object",
-                    "title": "Row Partition",
+                    "title":"Row Partition",
                     "format": "grid-strict",
                     "properties": {
                       "columns": {
                         "type": "array",
-                        "title": "Id Columns",
+                        "title":"Id Columns",
                         "uniqueItems": true,
                         "format": "table",
                         "items": {
@@ -183,13 +177,13 @@
                             "select_columns": "interim.selected_columns"
                           }
                         },
-                        "options": {
-                          "grid_columns": 4
-                        }
+                      "options": {
+                      "grid_columns": 4
+                      }
                       },
                       "orderby": {
                         "type": "array",
-                        "title": "Order by Columns",
+                        "title":"Order by Columns",
                         "uniqueItems": true,
                         "format": "table",
                         "items": {
@@ -202,22 +196,25 @@
                       },
                       "order": {
                         "type": "string",
-                        "title": "Order",
-                        "enum": ["ASC", "DESC"],
+                        "title":"Order",
+                        "enum": [
+                          "ASC",
+                          "DESC"
+                        ],
                         "options": {
-                          "grid_columns": 3
-                        }
+                      "grid_columns": 3
+                      }
                       }
                     },
                     "options": {
-                      "dependencies": {
-                        "deduplication_type": "Row Partition"
-                      }
+                    "dependencies": {
+                      "deduplication_type": "Row Partition"
                     }
+                  }
                   },
                   "groupby": {
                     "type": "object",
-                    "title": "Group by",
+                    "title":"Group by",
                     "format": "grid-strict",
                     "properties": {
                       "columns": {
@@ -232,53 +229,45 @@
                           }
                         },
                         "options": {
-                          "grid_columns": 3
-                        }
+                      "grid_columns": 3
+                      }
                       },
                       "column_aggregation": {
                         "type": "object",
-                        "title": "Column mapping with aggregation function",
+                        "title":"Column mapping with aggregation function",
                         "additionalProperties": {
                           "type": "array",
                           "items": {
                             "type": "string"
                           }
                         },
-                        "properties": {
-                          "SUM": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
+                        "properties":{
+                        "SUM":{
+                          "type":"array",
+                          "items":{
+                          "type":"string"
+                          }
                           }
                         },
                         "options": {
-                          "grid_columns": 3
-                        }
+                      "grid_columns": 3
+                      }
                       },
                       "default_aggregate_function": {
-                        "title": "Default Aggregate Function",
+                        "title":"Default Aggregate Function",
                         "type": "string",
-                        "enum": [
-                          "COUNT",
-                          "SUM",
-                          "AVG",
-                          "MIN",
-                          "MAX",
-                          "ARRAY_AGG",
-                          "STRING_AGG"
-                        ],
+                        "enum":["COUNT", "SUM", "AVG", "MIN", "MAX", "ARRAY_AGG", "STRING_AGG"],
                         "default": "STRING_AGG",
                         "options": {
-                          "grid_columns": 3
-                        }
+                      "grid_columns": 3
+                      }
                       }
                     },
                     "options": {
-                      "dependencies": {
-                        "deduplication_type": "Group by"
-                      }
+                    "dependencies": {
+                      "deduplication_type": "Group by"
                     }
+                  }
                   }
                 },
                 "options": {
@@ -289,8 +278,8 @@
               },
               "merge_condition": {
                 "type": "string",
-                "title": "Merge Condition",
-                "format": "sql",
+                "title":"Merge Condition",
+                "format":"sql",
                 "options": {
                   "dependencies": {
                     "enabled": true
@@ -299,11 +288,14 @@
               },
               "merge_type": {
                 "type": "array",
-                "title": "Merge Type",
+                "title":"Merge Type",
                 "uniqueItems": true,
                 "items": {
                   "type": "string",
-                  "enum": ["UPDATE", "INSERT"]
+                  "enum": [
+                    "UPDATE",
+                    "INSERT"
+                  ]
                 },
                 "options": {
                   "dependencies": {
@@ -314,7 +306,7 @@
             }
           },
           "recon": {
-            "title": "Recon Configuration",
+            "title":"Recon Configuration",
             "type": "object",
             "id": "recon",
             "options": {
@@ -328,7 +320,7 @@
                   "selected_columns": {
                     "type": "array",
                     "format": "table",
-                    "title": "Selected Columns",
+                    "title":"Selected Columns",
                     "uniqueItems": true,
                     "items": {
                       "type": "string",
@@ -338,13 +330,13 @@
                   "renamed_columns": {
                     "type": "array",
                     "format": "table",
-                    "title": "Renamed Columns",
+                    "title":"Renamed Columns",
                     "uniqueItems": true,
                     "items": {
                       "type": "object",
                       "properties": {
                         "old_column_name": {
-                          "title": "Old Column Name",
+                          "title":"Old Column Name",
                           "type": "string",
                           "enumSource": "select_columns",
                           "watch": {
@@ -352,7 +344,7 @@
                           }
                         },
                         "new_column_name": {
-                          "title": "New Column Name",
+                          "title":"New Column Name",
                           "type": "string",
                           "minLength": 1
                         }
@@ -361,32 +353,25 @@
                   },
                   "derived_columns": {
                     "type": "array",
-                    "title": "Derived Columns",
+                    "title":"Derived Columns",
                     "format": "table",
                     "items": {
                       "type": "object",
                       "properties": {
                         "column_name": {
-                          "title": "Column Name",
+                          "title":"Column Name",
                           "type": "string",
                           "minLength": 1
                         },
                         "column_data_type": {
                           "type": "string",
-                          "title": "Column Data Type",
-                          "enum": [
-                            "STRING",
-                            "FLOAT64",
-                            "INTEGER",
-                            "TIMESTAMP",
-                            "BOOLEAN",
-                            "DATE"
-                          ]
+                          "title":"Column Data Type",
+                          "enum":["STRING","FLOAT64","INTEGER","TIMESTAMP","BOOLEAN","DATE"]
                         },
                         "expression": {
                           "type": "string",
-                          "title": "Expression",
-                          "format": "sql"
+                          "title":"Expression",
+                          "format":"sql"
                         }
                       }
                     }
@@ -397,40 +382,40 @@
                   },
                   "exclude_prefix": {
                     "type": "array",
-                    "title": "Columns to exclude Prefix",
+                    "title":"Columns to exclude Prefix",
                     "items": {
                       "type": "string",
                       "enumSource": "select_columns",
                       "watch": {
                         "select_columns": "selection.selected_columns",
                         "derived_columns_list": "selection.derived_columns.column_name"
-                      }
                     }
-                  },
+                  }
+                },
                   "filters": {
                     "type": "string",
                     "title": "Filters",
-                    "format": "sql"
+                    "format":"sql"
                   },
-                  "deduplication": {
+                  "deduplication":{
                     "type": "object",
-                    "title": "Deduplication",
-                    "format": "grid",
+                    "title":"Deduplication",
+                    "format":"grid",
                     "properties": {
-                      "deduplication_type": {
-                        "title": "Deduplication Type",
-                        "type": "string",
-                        "enum": ["Select", "Row Partition", "Group by"],
-                        "default": "Select"
+                      "deduplication_type":{
+                         "title":"Deduplication Type",
+                         "type": "string",
+                         "enum": ["Select","Row Partition","Group by"],
+                         "default":"Select"
                       },
                       "row_partition": {
                         "type": "object",
-                        "title": "Row Partition",
+                        "title":"Row Partition",
                         "format": "grid-strict",
                         "properties": {
                           "columns": {
                             "type": "array",
-                            "title": "Id Columns",
+                            "title":"Id Columns",
                             "uniqueItems": true,
                             "format": "table",
                             "items": {
@@ -440,13 +425,13 @@
                                 "select_columns": "selection.selected_columns"
                               }
                             },
-                            "options": {
-                              "grid_columns": 4
-                            }
+                          "options": {
+                          "grid_columns": 4
+                          }
                           },
                           "orderby": {
                             "type": "array",
-                            "title": "Order by Columns",
+                            "title":"Order by Columns",
                             "uniqueItems": true,
                             "format": "table",
                             "items": {
@@ -459,22 +444,25 @@
                           },
                           "order": {
                             "type": "string",
-                            "title": "Order",
-                            "enum": ["ASC", "DESC"],
+                            "title":"Order",
+                            "enum": [
+                              "ASC",
+                              "DESC"
+                            ],
                             "options": {
-                              "grid_columns": 3
-                            }
+                          "grid_columns": 3
+                          }
                           }
                         },
                         "options": {
-                          "dependencies": {
-                            "deduplication_type": "Row Partition"
-                          }
+                        "dependencies": {
+                          "deduplication_type": "Row Partition"
                         }
+                      }
                       },
                       "groupby": {
                         "type": "object",
-                        "title": "Group by",
+                        "title":"Group by",
                         "format": "grid-strict",
                         "properties": {
                           "columns": {
@@ -489,53 +477,45 @@
                               }
                             },
                             "options": {
-                              "grid_columns": 3
-                            }
+                          "grid_columns": 3
+                          }
                           },
                           "column_aggregation": {
                             "type": "object",
-                            "title": "Column mapping with aggregation function",
+                            "title":"Column mapping with aggregation function",
                             "additionalProperties": {
                               "type": "array",
                               "items": {
                                 "type": "string"
                               }
                             },
-                            "properties": {
-                              "SUM": {
-                                "type": "array",
-                                "items": {
-                                  "type": "string"
-                                }
+                            "properties":{
+                            "SUM":{
+                              "type":"array",
+                              "items":{
+                              "type":"string"
+                              }
                               }
                             },
                             "options": {
-                              "grid_columns": 3
-                            }
+                          "grid_columns": 3
+                          }
                           },
                           "default_aggregate_function": {
-                            "title": "Default Aggregate Function",
+                            "title":"Default Aggregate Function",
                             "type": "string",
-                            "enum": [
-                              "COUNT",
-                              "SUM",
-                              "AVG",
-                              "MIN",
-                              "MAX",
-                              "ARRAY_AGG",
-                              "STRING_AGG"
-                            ],
+                            "enum":["COUNT", "SUM", "AVG", "MIN", "MAX", "ARRAY_AGG", "STRING_AGG"],
                             "default": "STRING_AGG",
                             "options": {
-                              "grid_columns": 3
-                            }
+                          "grid_columns": 3
+                          }
                           }
                         },
                         "options": {
-                          "dependencies": {
-                            "deduplication_type": "Group by"
-                          }
+                        "dependencies": {
+                          "deduplication_type": "Group by"
                         }
+                      }
                       }
                     }
                   }
@@ -543,16 +523,19 @@
               },
               "merge_condition": {
                 "type": "string",
-                "title": "Merge Condition",
-                "format": "sql"
+                "title":"Merge Condition",
+                "format":"sql"
               },
               "merge_type": {
                 "type": "array",
-                "title": "Merge Type",
+                "title":"Merge Type",
                 "uniqueItems": true,
                 "items": {
                   "type": "string",
-                  "enum": ["UPDATE", "INSERT"]
+                  "enum": [
+                    "UPDATE",
+                    "INSERT"
+                  ]
                 }
               }
             }
@@ -562,18 +545,18 @@
     },
     "aggregated_sources": {
       "type": "array",
-      "title": "Aggregated Sources",
-      "options": {
-        "compact": true,
-        "disable_collapse": true
+      "title":"Aggregated Sources",
+      "options":{
+        "compact":true,
+        "disable_collapse":true
       },
       "items": {
         "type": "object",
-        "title": "Aggregated Source",
+        "title":"Aggregated Source",
         "properties": {
           "sources": {
             "type": "array",
-            "title": "Select Sources",
+            "title":"Select Sources",
             "items": {
               "type": "string",
               "enumSource": "source_names",
@@ -582,8 +565,8 @@
               }
             }
           },
-          "recon": {
-            "title": "Recon Configuration",
+          "recon":  {
+            "title":"Recon Configuration",
             "type": "object",
             "id": "recon",
             "options": {
@@ -597,7 +580,7 @@
                   "selected_columns": {
                     "type": "array",
                     "format": "table",
-                    "title": "Selected Columns",
+                    "title":"Selected Columns",
                     "uniqueItems": true,
                     "items": {
                       "type": "string",
@@ -607,13 +590,13 @@
                   "renamed_columns": {
                     "type": "array",
                     "format": "table",
-                    "title": "Renamed Columns",
+                    "title":"Renamed Columns",
                     "uniqueItems": true,
                     "items": {
                       "type": "object",
                       "properties": {
                         "old_column_name": {
-                          "title": "Old Column Name",
+                          "title":"Old Column Name",
                           "type": "string",
                           "enumSource": "select_columns",
                           "watch": {
@@ -621,7 +604,7 @@
                           }
                         },
                         "new_column_name": {
-                          "title": "New Column Name",
+                          "title":"New Column Name",
                           "type": "string",
                           "minLength": 1
                         }
@@ -640,41 +623,41 @@
                   },
                   "exclude_prefix": {
                     "type": "array",
-                    "title": "Columns to exclude Prefix",
+                    "title":"Columns to exclude Prefix",
                     "items": {
                       "type": "string",
                       "enumSource": "select_columns",
                       "watch": {
                         "select_columns": "selection.selected_columns",
-                        "renamed_columns": "selection.renamed_columns.new_column_name",
-                        "derived_columns": "selection.derived_columns.column_name"
-                      }
+                        "renamed_columns":"selection.renamed_columns.new_column_name",
+                        "derived_columns":"selection.derived_columns.column_name"
                     }
-                  },
+                  }
+                },
                   "filters": {
                     "type": "string",
                     "title": "Filters",
-                    "format": "sql"
+                    "format":"sql"
                   },
-                  "deduplication": {
+                  "deduplication":{
                     "type": "object",
-                    "title": "Deduplication",
-                    "format": "grid",
+                    "title":"Deduplication",
+                    "format":"grid",
                     "properties": {
-                      "deduplication_type": {
-                        "title": "Deduplication Type",
-                        "type": "string",
-                        "enum": ["Select", "Row Partition", "Group by"],
-                        "default": "Select"
+                      "deduplication_type":{
+                         "title":"Deduplication Type",
+                         "type": "string",
+                         "enum": ["Select","Row Partition","Group by"],
+                         "default":"Select"
                       },
                       "row_partition": {
                         "type": "object",
-                        "title": "Row Partition",
+                        "title":"Row Partition",
                         "format": "grid-strict",
                         "properties": {
                           "columns": {
                             "type": "array",
-                            "title": "Id Columns",
+                            "title":"Id Columns",
                             "uniqueItems": true,
                             "format": "table",
                             "items": {
@@ -684,13 +667,13 @@
                                 "select_columns": "selection.selected_columns"
                               }
                             },
-                            "options": {
-                              "grid_columns": 4
-                            }
+                          "options": {
+                          "grid_columns": 4
+                          }
                           },
                           "orderby": {
                             "type": "array",
-                            "title": "Order by Columns",
+                            "title":"Order by Columns",
                             "uniqueItems": true,
                             "format": "table",
                             "items": {
@@ -703,22 +686,25 @@
                           },
                           "order": {
                             "type": "string",
-                            "title": "Order",
-                            "enum": ["ASC", "DESC"],
+                            "title":"Order",
+                            "enum": [
+                              "ASC",
+                              "DESC"
+                            ],
                             "options": {
-                              "grid_columns": 3
-                            }
+                          "grid_columns": 3
+                          }
                           }
                         },
                         "options": {
-                          "dependencies": {
-                            "deduplication_type": "Row Partition"
-                          }
+                        "dependencies": {
+                          "deduplication_type": "Row Partition"
                         }
+                      }
                       },
                       "groupby": {
                         "type": "object",
-                        "title": "Group by",
+                        "title":"Group by",
                         "format": "grid-strict",
                         "properties": {
                           "columns": {
@@ -733,53 +719,45 @@
                               }
                             },
                             "options": {
-                              "grid_columns": 3
-                            }
+                          "grid_columns": 3
+                          }
                           },
                           "column_aggregation": {
                             "type": "object",
-                            "title": "Column mapping with aggregation function",
+                            "title":"Column mapping with aggregation function",
                             "additionalProperties": {
                               "type": "array",
                               "items": {
                                 "type": "string"
                               }
                             },
-                            "properties": {
-                              "SUM": {
-                                "type": "array",
-                                "items": {
-                                  "type": "string"
-                                }
+                            "properties":{
+                            "SUM":{
+                              "type":"array",
+                              "items":{
+                              "type":"string"
+                              }
                               }
                             },
                             "options": {
-                              "grid_columns": 3
-                            }
+                          "grid_columns": 3
+                          }
                           },
                           "default_aggregate_function": {
-                            "title": "Default Aggregate Function",
+                            "title":"Default Aggregate Function",
                             "type": "string",
-                            "enum": [
-                              "COUNT",
-                              "SUM",
-                              "AVG",
-                              "MIN",
-                              "MAX",
-                              "ARRAY_AGG",
-                              "STRING_AGG"
-                            ],
+                            "enum":["COUNT", "SUM", "AVG", "MIN", "MAX", "ARRAY_AGG", "STRING_AGG"],
                             "default": "STRING_AGG",
                             "options": {
-                              "grid_columns": 3
-                            }
+                          "grid_columns": 3
+                          }
                           }
                         },
                         "options": {
-                          "dependencies": {
-                            "deduplication_type": "Group by"
-                          }
+                        "dependencies": {
+                          "deduplication_type": "Group by"
                         }
+                      }
                       }
                     }
                   }
@@ -787,16 +765,19 @@
               },
               "merge_condition": {
                 "type": "string",
-                "title": "Merge Condition",
-                "format": "sql"
+                "title":"Merge Condition",
+                "format":"sql"
               },
               "merge_type": {
                 "type": "array",
-                "title": "Merge Type",
+                "title":"Merge Type",
                 "uniqueItems": true,
                 "items": {
                   "type": "string",
-                  "enum": ["UPDATE", "INSERT"]
+                  "enum": [
+                    "UPDATE",
+                    "INSERT"
+                  ]
                 }
               }
             }
@@ -806,15 +787,15 @@
     },
     "flags": {
       "type": "object",
-      "title": "Flags",
+      "title":"Flags",
       "options": {
-        "disable_collapse": true,
-        "disable_properties": true
+      "disable_collapse": true,
+      "disable_properties": true
       },
       "properties": {
         "recon_flag": {
           "type": "object",
-          "title": "Recon Flag Configuration",
+          "title":"Recon Flag Configuration",
           "properties": {
             "enabled": {
               "type": "boolean",
@@ -823,47 +804,40 @@
             "prefix": {
               "type": "string",
               "options": {
-                "dependencies": {
-                  "enabled": true
+                  "dependencies": {
+                    "enabled": true
+                  }
                 }
-              }
             },
             "expression_value_mapping": {
               "type": "object",
-              "title": "Expression Value Mapping",
+              "title":"Expression Value Mapping",
               "options": {
-                "dependencies": {
-                  "enabled": true
+                  "dependencies": {
+                    "enabled": true
+                  }
                 }
-              }
             }
           },
-          "options": {
+          "options":{
             "collapsed": true
           }
         },
         "other_flags": {
           "type": "array",
-          "title": "Other Flag Configuration",
+          "title":"Other Flag Configuration",
           "items": {
             "type": "object",
-            "title": "Flag",
+            "title":"Flag",
             "properties": {
               "column_name": {
                 "type": "string",
-                "title": "Flag Name"
+                "title":"Flag Name"
               },
               "column_data_type": {
                 "type": "string",
-                "title": "Flag Column Data Type",
-                "enum": [
-                  "STRING",
-                  "FLOAT64",
-                  "INTEGER",
-                  "TIMESTAMP",
-                  "BOOLEAN",
-                  "DATE"
-                ]
+                "title":"Flag Column Data Type",
+                "enum":["STRING","FLOAT64","INTEGER","TIMESTAMP","BOOLEAN","DATE"]
               },
               "expression": {
                 "type": "string"
@@ -873,7 +847,7 @@
               }
             }
           },
-          "options": {
+          "options":{
             "collapsed": true
           }
         }
@@ -884,4 +858,56 @@
       "type": "boolean"
     }
   }
+},
+  "startval": {
+    "fruits": [
+      "apple",
+      "orange",
+      "pear"
+    ],
+    "vegetables": [
+      {
+        "veggieName": "potato",
+        "veggieLike": true
+      },
+      {
+        "veggieName": "broccoli",
+        "veggieLike": false
+      }
+    ]
+  },
+  "config": {
+    "required_by_default": 1,
+    "no_additional_properties": 0,
+    "display_required_only": 0,
+    "keep_oneof_values": 0,
+    "ajax": 0,
+    "ajaxCredentials": 0,
+    "show_opt_in": 0,
+    "disable_edit_json": 0,
+    "disable_collapse": 0,
+    "disable_properties": 0,
+    "disable_array_add": 0,
+    "disable_array_reorder": 0,
+    "disable_array_delete": 0,
+    "enable_array_copy": 0,
+    "array_controls_top": 0,
+    "disable_array_delete_all_rows": 0,
+    "disable_array_delete_last_row": 0,
+    "prompt_before_delete": 0,
+    "lib_aceeditor": 0,
+    "lib_sceditor": 0,
+    "lib_simplemde": 0,
+    "lib_select2": 0,
+    "lib_selectize": 0,
+    "lib_flatpickr": 0,
+    "lib_signaturepad": 0,
+    "lib_mathjs": 0,
+    "lib_cleavejs": 0,
+    "lib_jquery": 0,
+    "lib_dompurify": 1
+  },
+  "code": "// The following lines are mandatory and readonly. You can add custom code above and below.\nif (jseditor instanceof window.JSONEditor) jseditor.destroy();\njseditor = new window.JSONEditor(document.querySelector(\"#json-editor-form\"), jedata);",       
+  "style": "",
+  "desc": "Add optional description here. (HTML format)"
 }

@@ -686,7 +686,7 @@
       jeModalContent.innerHTML = jeExampleDesc.innerHTML = '<h3>Info about "' + example.title + '" Example</h3>' + desc
       toggleModal()
     }
-
+    console.log(schema,startval,code,style,aceSchemaEditor)
     // Update ACE Editor instances
     aceSchemaEditor.setValue(schema)
     aceSchemaEditor.session.getSelection().clearSelection()
